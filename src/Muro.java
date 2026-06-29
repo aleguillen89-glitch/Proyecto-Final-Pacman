@@ -16,7 +16,4 @@ public class Muro {
     public int getColumna () {
         return this.columna;
     }
-    public String toString () {
-        return " Muro " + ObtenerPosicion();
-    }
 }
