@@ -22,6 +22,7 @@ public class Enemigo {
         this.activo = true;
         this.vida = 3;
         this.armadura = 0;
+        this.experiencia = 10;
 
         // Stats iniciales según el tipo de enemigo
         switch (tipo) {
@@ -30,12 +31,13 @@ public class Enemigo {
                 break;
             case "Armadura":
                 // no atraviesa muros, tiene escudo
+                this.experiencia = 30; // mas dificil de matar, da mas puntos
                 this.armadura = 1; //resiste un instakill antes de morir
                 break;
             case "Perseguidor":
             case "Aleatorio":
             default:
-                this.armadura = 0;
+                this.experiencia = 10;
         }
     }
 
@@ -109,6 +111,7 @@ public class Enemigo {
     public void setFila(int fila) { this.fila = fila; }
     public void setColumna(int columna) { this.columna = columna; }
     public void setTipo(String tipo) { this.tipo = tipo; }
+    public void setExperiencia(int experiencia) { this.experiencia = experiencia; }
 
 
     public String getNombre() {
@@ -134,6 +137,9 @@ public class Enemigo {
     }
     public String getTipo() {
         return this.tipo;
+    }
+    public int getExperiencia() {
+        return this.experiencia;
     }
 
 }

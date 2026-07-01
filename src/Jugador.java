@@ -13,7 +13,7 @@ public class Jugador {
     //Metodos
     public void usarPoder() { }
     public void mostrarEstado() { }
-    public boolean estaVivo() { return vida>0; }
+    public boolean estaVivo() { return vida > 0; }
     public void mover() { }
     public void esquivar() { }
     public void recibirDano(int danodeAtaque) { }
