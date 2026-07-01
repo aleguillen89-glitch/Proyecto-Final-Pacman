@@ -2,57 +2,48 @@ public class Enemigo {
     // Atributos
     private String tipo;
     private String nombre;
-    private String vida;
-    private int DanodeAtaque;
-    private String Armadura;
-    private String Aleatorio;
-    private int Experiencia;
-    private int Fila;
-    private int Columna;
-    private boolean Activo;
-    private String Atravesar;
+    private int dano;
+    private int fila;
+    private int columna;
+    private boolean activo;
+
+    public Enemigo(String tipo, int fila, int columna, int dano){
+        this.tipo=tipo;
+        this.fila=fila;
+        this.columna=columna;
+        this.dano=dano;
+        this.activo=true;
+    }
 
     // Metodos
-    public void atacar() { }
-    public void mover() { }
+    public void atacar(Jugador j) { }
+    public void mover(Jugador jugador, Tablero tablero) {
+
+    }
     public void mostrarEstado() { }
-    public void verificarColision() { }
-    public void esquivar() { }
+    public void verificarColision(Jugador j) { }
     public void recibirDano() { }
-    public void recibirArmadura() { }
     public void morir() { }
-    public void perseguirJugador() { }
-    public void patrullar() { }
 
     // Get
-    public void setnombre (String nombre) { this.nombre = nombre; }
-    public void setvida(String vida) { this.vida = vida; }
-    public void setArmadura(String Armadura) { this.Armadura = Armadura; }
-    public void setDanodeAtaque(int DanodeAtaque) {this.DanodeAtaque = DanodeAtaque; }
-    public void setActivo(boolean Activo) { this.Activo = Activo; }
-    public void setAleatorio(String Aleatorio) { this.Aleatorio = Aleatorio; }
-    public void setAtravesar(String Atravesar) { this.Atravesar = Atravesar; }
+    public void setNombre (String nombre) { this.nombre = nombre; }
+    public void setDano(int DanodeAtaque) {this.dano= DanodeAtaque; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+    public void setFila(int fila){this.fila=fila;}
+    public void setColumna(int columna){this.columna=columna;}
 
-    public String getnombre() {
+
+    public String getNombre() {
         return this.nombre;
     }
-    public String getvida() {
-        return this.vida;
+    public int getDano() {
+        return dano;
     }
-    public String getArmadura() {
-        return Armadura;
+    public boolean isActivo() {
+        return activo;
     }
-    public int getDanodeAtaque() {
-        return DanodeAtaque;
-    }
-    public boolean getActivo() {
-        return Activo;
-    }
-    public String getAleatorio() {
-        return Aleatorio;
-    }
-    public String getAtravesar() {
-        return Atravesar;
-    }
+    public int getFila(){return fila;}
+    public int getColumna(){return columna;}
+    public String getTipo(){return tipo;}
 
 }

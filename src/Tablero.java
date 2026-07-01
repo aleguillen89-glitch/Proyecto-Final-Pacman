@@ -9,10 +9,10 @@ public class Tablero {
     private Random rand = new Random();
 
 
-    public Tablero(int filas, int columnas, int cantidadMuros, int cantidadPoderes, int cantidadPuntos){
-        this.filas=filas;
-        this.columnas=columnas;
-        matriz=new char [filas][columnas];
+    public Tablero(int fila, int columna, int cantidadMuros, int cantidadPoderes, int cantidadPuntos){
+        this.filas=fila;
+        this.columnas=columna;
+        matriz=new char [fila][columna];
         muros=new Muro[cantidadMuros];
         poderes=new Poder[cantidadPoderes];
         puntos=new Punto[cantidadPuntos];
@@ -43,7 +43,7 @@ public class Tablero {
     public void agregarPuntos() {
         for (int i = 0; i < puntos.length; i++) {
             int filaRandom = rand.nextInt(filas - 2) + 1;
-            int columnasRandom = rand.nextInt(columnas - 2) + 1;
+            int columnasRandom = rand.nextInt(columnas- 2) + 1;
             while ((filaRandom == 1 && columnasRandom == 1) || matriz[filaRandom][columnasRandom] == '#') {
                 filaRandom = rand.nextInt(filas - 2) + 1;
                 columnasRandom = rand.nextInt(columnas - 2) + 1;
@@ -54,11 +54,11 @@ public class Tablero {
     }
     public void agregarPoderes(){
        for(int i=0; i< poderes.length;i++){
-           int filaRandom = rand.nextInt(filas-2)+1;
-           int columnaRandom = rand.nextInt(columnas-2)+1;
+           int filaRandom = rand.nextInt(filas -2)+1;
+           int columnaRandom = rand.nextInt(columnas -2)+1;
            while ((filaRandom==1 && columnaRandom==1)|| matriz[filaRandom][columnaRandom]=='#'|| matriz[filaRandom][columnaRandom]=='*'){
-               filaRandom= rand.nextInt(filas-2)+1;
-               columnaRandom =rand.nextInt(columnas-2)+1;
+               filaRandom= rand.nextInt(filas -2)+1;
+               columnaRandom =rand.nextInt(columnas -2)+1;
            }
            String tipo;
            if (i % 3 == 0){
@@ -72,7 +72,27 @@ public class Tablero {
            matriz[filaRandom][columnaRandom]= 'O';
        }
     }
-
-
+    public void mostrarTablero (Jugador jugador){
+        for (int i=0; i< matriz.length;i++){
+            for (int j=0; j< matriz[i].length;j++){
+                if ( i== jugador.getFila() && j== jugador.getColumna()){
+                    System.out.print('P');
+                }else{
+                    System.out.print(matriz[i][j]);
+                }
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
+    public boolean movimientoValido (int fila, int columna){
+        if ( fila<0 || fila>=filas || columna<0 || columna>=columnas) {
+            return false;
+        }
+        if (matriz[fila][columna]=='#'){
+            return false;
+        }
+        return true;
+    }
 }
 
