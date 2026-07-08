@@ -10,22 +10,86 @@ public class Jugador {
     private int puntaje;
     private boolean poderActivo;
 
-    //Metodos
-    public void usarPoder() { }
-    public void mostrarEstado() { }
-    public boolean estaVivo() { return vida > 0; }
-    public void mover() { }
-    public void esquivar() { }
-    public void recibirDano(int danodeAtaque) { }
-    public void recibirArmadura() { }
-    public void morir() { }
-    public void recogerPunto() { }
-    public Jugador (String nombre, int fila, int columna) {
-        vida=3;
-        velocidad=1;
-        puntaje=0;
-        poderActivo=false;
+    //Constructor
+    public Jugador(String nombre,int fila,int columna) {
+        this.nombre = nombre;
+        this.fila = fila;
+        this.columna = columna;
+        this.vida = 3;
+        this.danoataque = 1;
+        this.armadura = 0;
+        this.velocidad = 1;
+        this.puntaje = 0;
+        this.poderActivo = false;
     }
+    //Metodos
+    //Poder especil
+    public void usarPoder() {
+        if (!poderActivo){
+            System.out.println(" No tienes poder activo!");
+            return;
+        }
+        System.out.println(nombre + " Activo el poder especial! Los enemigos son vulnerable!");
+        this.poderActivo = false;
+    }
+    //Muestra estado en consola
+    public void mostrarEstado() {
+        System.out.println("=== JUGADOR ===");
+        System.out.println("Nombre  : " + nombre);
+        System.out.println("Vida    : " + vida);
+        System.out.println("Armadura: " + armadura);
+        System.out.println("Puntaje : " + puntaje);
+        System.out.println("Posición: (" + fila + ", " + columna + ")");
+        System.out.println("Poder   : " + (poderActivo ? "ACTIVO" : "sin poder"));
+    }
+    //Verificar si esta vivo
+    public boolean estaVivo() {
+        return this.vida > 0;
+    }
+    //El jugador se mueve con W/A/S/D
+    public void mover(char direccion) {
+        switch (direccion) {
+            case 'w': this.fila -= this.velocidad; break;
+            case 's': this.fila += this.velocidad; break;
+            case 'a': this.columna -= this.velocidad; break;
+            case 'd': this.columna += this.velocidad; break;
+            default:
+                System.out.println("Direccion incorrecto. Usa W/A/S/D");
+        }
+    }
+    //recibe daño de un enemigo al colisionar
+    public void recibirDano(int danodeAtaque) {
+        if (this.armadura > 0) {
+            this.armadura--; //la armadura absorbe el golpe
+            System.out.println(nombre + " Bloqueó el ataque con armadura!");
+        } else {
+            this.vida -= danodeAtaque;
+            System.out.println(nombre + " recibio " + danodeAtaque + " de daño. Vida restante: " + vida);
+            if (!estaVivo()) {
+                morir();
+            }
+        }
+    }
+    //Recoge armadura del mapa(como power-up)
+    public void recibirArmadura() {
+        this.armadura++;
+        System.out.println(nombre + " recogio armadura! Armadura : " + armadura);
+    }
+    //Muere
+    public void morir() {
+        System.out.println("GAME OVER! " + nombre + " ha muerto. ");
+    }
+    //Recoge un punto del mapa
+    public void recogerPunto() {
+        this.puntaje += 10;
+        System.out.println(nombre + " recogio un punto! Puntaje: " + puntaje);
+    }
+    //Suma a experiencia del enemigo al puntaje
+    public void sumarPuntaje(int puntos) {
+        this.puntaje += puntos;
+        System.out.println("+" + puntos + " puntos! Puntaje total: " + puntaje);
+    }
+
 
     //Get
     public void setNombre(String nombre) { this.nombre = nombre; }
