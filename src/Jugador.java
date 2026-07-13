@@ -81,7 +81,7 @@ public class Jugador {
     }
     //Recoge un punto del mapa
     public void recogerPunto() {
-        this.puntaje += 10;
+        this.puntaje += 5;
         System.out.println(nombre + " recogio un punto! Puntaje: " + puntaje);
     }
     //Suma a experiencia del enemigo al puntaje

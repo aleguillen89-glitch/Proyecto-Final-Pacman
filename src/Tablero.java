@@ -72,18 +72,32 @@ public class Tablero {
            matriz[filaRandom][columnaRandom]= 'O';
        }
     }
-    public void mostrarTablero (Jugador jugador){
+    public void mostrarTablero (Jugador jugador,Enemigo[]enemigos){
         for (int i=0; i< matriz.length;i++){
             for (int j=0; j< matriz[i].length;j++){
-                if ( i== jugador.getFila() && j== jugador.getColumna()){
+                boolean esEnemigo =false;
+                for (Enemigo e: enemigos){
+                    if(e.getActivo() && e.getFila() == i && e.getColumna() ==j){
+                        esEnemigo=true;
+                        break;
+                    }
+                }
+                if ( i== jugador.getFila() && j== jugador.getColumna()) {
                     System.out.print('P');
-                }else{
+                } else if (esEnemigo) {
+                    System.out.print('E');
+                } else{
                     System.out.print(matriz[i][j]);
                 }
                 System.out.print(" ");
             }
             System.out.println();
         }
+        System.out.println("===================");
+        System.out.println(" Jugador : " + jugador.getNombre());
+        System.out.println(" Puntaje : " + jugador.getPuntaje());
+        System.out.println("  Vida   : " + jugador.getVida());
+        System.out.println("===================");
     }
     public boolean movimientoValido (int fila, int columna){
         if ( fila<0 || fila>=filas || columna<0 || columna>=columnas) {
@@ -94,5 +108,23 @@ public class Tablero {
         }
         return true;
     }
+    public boolean hayPunto(int fila, int columna){
+        return matriz[fila][columna] == '.';
+    }
+    public void eliminarPunto(int fila , int columna){
+        matriz [fila][columna]= ' ';
+    }
+    public boolean quedanPuntos(){
+        for (int i=0; i< filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (matriz[i][j] == '.' ){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public int getFilas(){return filas;}
+    public int getColumnas(){return columnas;}
 }
 

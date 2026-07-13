@@ -29,11 +29,13 @@ public class Juego {
         }
         System.out.println("¿Cuántos muros interiores quiere?");
         int cantMuro= sc.nextInt();
+        System.out.println("¿Cuantos enemigos quieres?");
+        int cantEnemigo = sc.nextInt();
+        enemigos =new Enemigo[cantEnemigo];
 
         tablero =new Tablero(fila, columna, cantMuro, 3, 5);
         tablero.generarTablero();
         tablero.agregarMuros();
-        tablero.agregarPuntos();
         tablero.agregarPoderes();
 
         int filaJugador = rand.nextInt(fila-2)+1;
@@ -44,11 +46,11 @@ public class Juego {
             columnaJugador = rand.nextInt(columna-2)+1;
         }
         jugador = new Jugador(nombre , filaJugador , columnaJugador);
-        tablero.mostrarTablero(jugador);
+        generarEnemigos();
+        tablero.mostrarTablero(jugador,enemigos);
         while (!juegoTerminado){
             ejecutarTurno();
         }
-
     }
     public void ejecutarTurno(){
         Scanner sc= new Scanner(System.in);
@@ -69,11 +71,44 @@ public class Juego {
         if (tablero.movimientoValido(nuevaFila,nuevaColumna)){
             jugador.setFila(nuevaFila);
             jugador.setColumna(nuevaColumna);
+            if (tablero.hayPunto(nuevaFila,nuevaColumna)){
+                jugador.recogerPunto();
+                tablero.eliminarPunto(nuevaFila,nuevaColumna);
+            }
+            if (!tablero.quedanPuntos()){
+                System.out.println(" ¡ Ganaste ! Recogiste todos los puntos ");
+                System.out.println(" Puntaje final : " + jugador.getPuntaje());
+                juegoTerminado =true;
+            }
 
         }else{
             System.out.println("!hay una pared ahí");
         }
-        tablero.mostrarTablero(jugador);
-
+        for (Enemigo e:enemigos){
+            if (e.getActivo()){
+                e.mover(jugador);
+            }
+        }
+        tablero.mostrarTablero(jugador,enemigos);
     }
+    public void generarEnemigos() {
+        for (int i=0; i< enemigos.length;i++){
+            int filaEnemigo = rand.nextInt(tablero.getFilas()-2)+1;
+            int columnaEnemigo = rand.nextInt(tablero.getColumnas()-2)+1;
+            while (!tablero.movimientoValido(filaEnemigo,columnaEnemigo) || (filaEnemigo==jugador.getFila()&&columnaEnemigo==jugador.getColumna())){
+                filaEnemigo= rand.nextInt(tablero.getFilas()-2)+1;
+                columnaEnemigo= rand.nextInt(tablero.getColumnas()-2)+1;
+            }
+            if (i % 4==0){
+                enemigos[i]=new Perseguidor("Perseguidor",filaEnemigo,columnaEnemigo);
+            } else if (i % 4 == 1) {
+                enemigos[i]=new Aleatorio("Aleatorio",filaEnemigo,columnaEnemigo);
+            } else if (i % 4 == 2) {
+                enemigos[i]=new Armadura("Armadura",filaEnemigo,columnaEnemigo);
+            }else{
+                enemigos[i]=new Fantasma("Fantasma",filaEnemigo,columnaEnemigo);
+            }
+        }
+    }
+
 }
