@@ -40,18 +40,7 @@ public class Tablero {
             matriz[filaRandom][columnaRandom]='#';
         }
     }
-    public void agregarPuntos() {
-        for (int i = 0; i < puntos.length; i++) {
-            int filaRandom = rand.nextInt(filas - 2) + 1;
-            int columnasRandom = rand.nextInt(columnas- 2) + 1;
-            while ((filaRandom == 1 && columnasRandom == 1) || matriz[filaRandom][columnasRandom] == '#') {
-                filaRandom = rand.nextInt(filas - 2) + 1;
-                columnasRandom = rand.nextInt(columnas - 2) + 1;
-            }
-            puntos[i] = new Punto(filaRandom, columnasRandom, 5);
-            matriz[filaRandom][columnasRandom] = '*';
-        }
-    }
+
     public void agregarPoderes(){
        for(int i=0; i< poderes.length;i++){
            int filaRandom = rand.nextInt(filas -2)+1;
@@ -64,7 +53,7 @@ public class Tablero {
            if (i % 3 == 0){
                tipo="Velocidad";
            } else if (i % 3 == 1) {
-               tipo="Congelar";
+               tipo="Vulnerable";
            }else {
                tipo="Vida";
            }
@@ -126,5 +115,19 @@ public class Tablero {
     }
     public int getFilas(){return filas;}
     public int getColumnas(){return columnas;}
+    public boolean hayPoder(int filas, int columnas){
+        return  matriz[filas][columnas] == 'O';
+    }
+    public Poder obtenerPoder(int filas,int columnas){
+        for(Poder p:poderes){
+            if(!p.estaActivo() && p.getFila()==filas && p.getColumna()==columnas){
+                return p;
+            }
+        }
+        return null;
+    }
+    public void eliminarPoder (int filas,int columnas){
+        matriz[filas][columnas] = ' ';
+    }
 }
 

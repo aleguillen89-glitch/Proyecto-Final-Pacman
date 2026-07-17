@@ -24,7 +24,7 @@ public abstract class Enemigo {
     }
 
     //  Metodo abstracto - va dentro de la clase
-    public abstract void mover(Jugador j);
+    public abstract void mover(Jugador j,Tablero tablero);
 
     // Métodos normales
     public void atacar(Jugador j) {

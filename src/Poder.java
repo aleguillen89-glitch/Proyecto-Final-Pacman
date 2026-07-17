@@ -11,9 +11,30 @@ public class Poder {
         this.tipo=tipo;
         this.duracion=duracion;
     }
-    public void activar(Jugador j){}
+    public void activar(Jugador j){
+        switch (tipo){
+            case "Velocidad":
+                j.setVelocidad(j.getVelocidad()+1);
+                System.out.println("¡Velocidad Aumentada!");
+                break;
+            case "Vulnerable":
+                j.setPoderActivo(true);
+                System.out.println("¡Enemigos Congelados!");
+                break;
+            case "Vida":
+                j.setVida(j.getVida()+1);
+                System.out.println("Vida Recuperada");
+                break;
+        }
+        this.activo =true;
+    }
     public String descripcion(){
-        return "";
+        switch (tipo) {
+            case "Velocidad": return "Aumenta tu velocidad temporalmente";
+            case "Congelar": return "Congela a todos los enemigos";
+            case "Vida": return "Recupera 1 punto de vida";
+            default: return "Poder desconocido";
+        }
     }
     public boolean estaActivo(){
         return activo;
