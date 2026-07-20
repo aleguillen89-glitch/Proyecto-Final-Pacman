@@ -19,7 +19,7 @@ public class Poder {
                 break;
             case "Vulnerable":
                 j.setPoderActivo(true);
-                System.out.println("¡Enemigos Congelados!");
+                System.out.println("¡Enemigos Vulnerables!");
                 break;
             case "Vida":
                 j.setVida(j.getVida()+1);
@@ -31,7 +31,7 @@ public class Poder {
     public String descripcion(){
         switch (tipo) {
             case "Velocidad": return "Aumenta tu velocidad temporalmente";
-            case "Congelar": return "Congela a todos los enemigos";
+            case "Vulnerabilidad": return "Vulnerable todos los enemigos";
             case "Vida": return "Recupera 1 punto de vida";
             default: return "Poder desconocido";
         }

@@ -15,21 +15,23 @@ public class Juego {
     public void mostrarMenu(){
         Scanner sc = new Scanner(System.in);
         int opcion=0;
-        while(opcion !=3){
+        while(opcion !=4){
             System.out.println("==============================");
             System.out.println("     BIENVENIDO A PAC-MAN    ");
             System.out.println("==============================");
-            System.out.println("1. Iniciar juego");
-            System.out.println("2. Ver instrucciones");
-            System.out.println("3. Salir");
+            System.out.println("1. Iniciar juego (consola)");
+            System.out.println("2. Iniciar juego (gráfico)");
+            System.out.println("3. Ver instrucciones");
+            System.out.println("4. Salir");
             System.out.println("==============================");
             System.out.print("Elige una opción: ");
             opcion = sc.nextInt();
 
             switch (opcion){
                 case 1: iniciarJuego(); break;
-                case 2: mostrarInstrucciones();break;
-                case 3: System.out.println("¡Hasta Luego!");break;
+                case 2: iniciarVentana();break;
+                case 3:mostrarInstrucciones();break;
+                case 4: System.out.println("¡Hasta Luego!");break;
                 default: System.out.println("Opcion invalida");
             }
         }
@@ -54,8 +56,13 @@ public class Juego {
             columna = sc.nextInt();
             if (columna < 3) System.out.println("Debe ser mínimo 3.");
         }
-        System.out.println("¿Cuántos muros interiores quiere?");
-        int cantMuro= sc.nextInt();
+
+        int maxMuros = (int)((fila - 2) * (columna - 2) * 0.2);
+        System.out.println("¿Cuántos muros interiores quiere? (máximo " + maxMuros + ")");
+        int cantMuro = sc.nextInt();
+        if (cantMuro > maxMuros) {
+            cantMuro = maxMuros;
+        }
         System.out.println("¿Cuantos enemigos quieres?");
         int cantEnemigo = sc.nextInt();
         enemigos =new Enemigo[cantEnemigo];
@@ -81,97 +88,91 @@ public class Juego {
         }
     }
     public void ejecutarTurno(){
-        Scanner sc= new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         System.out.print("Movimiento (w/a/s/d):");
         char tecla = sc.next().charAt(0);
-        boolean movimientoOk =true;
+        boolean movimientoOk = true;
         int filaTemp = jugador.getFila();
         int columnaTemp = jugador.getColumna();
+
         if (turnosPoder > 0) {
             turnosPoder--;
             if (turnosPoder == 0) {
                 jugador.setPoderActivo(false);
-                jugador.setVelocidad(1); // restaura velocidad normal
+                jugador.setVelocidad(1);
                 System.out.println("¡El poder ha terminado!");
             }
         }
-        for (int paso =0; paso<jugador.getVelocidad();paso++) {
+
+        for (int paso = 0; paso < jugador.getVelocidad(); paso++) {
             switch (tecla) {
-                case 'w':
-                    filaTemp--;
-                    break;
-                case 's':
-                    filaTemp++;
-                    break;
-                case 'a':
-                    columnaTemp--;
-                    break;
-                case 'd':
-                    columnaTemp++;
-                    break;
-                default:
-                    System.out.println("Tecla inválida");
-                    return;
+                case 'w': filaTemp--; break;
+                case 's': filaTemp++; break;
+                case 'a': columnaTemp--; break;
+                case 'd': columnaTemp++; break;
+                default: System.out.println("Tecla inválida"); return;
             }
-            if (!tablero.movimientoValido(filaTemp,columnaTemp)){
-                movimientoOk =false;
+            if (!tablero.movimientoValido(filaTemp, columnaTemp)) {
+                movimientoOk = false;
                 break;
             }
         }
 
-        if (movimientoOk){
+        if (movimientoOk) {
             jugador.setFila(filaTemp);
             jugador.setColumna(columnaTemp);
-            if (tablero.hayPunto(filaTemp,columnaTemp)){
-                jugador.recogerPunto();
-                tablero.eliminarPunto(filaTemp,columnaTemp);
-            }
-            if (tablero.hayPoder(filaTemp,columnaTemp)){
-                Poder p = tablero.obtenerPoder(filaTemp,columnaTemp);
-                if (p!=null){
-                    p.activar(jugador);
-                    turnosPoder = p.getDuracion();
-                    System.out.println("¡recogiste un poder : " + p.descripcion() + "!");
-                    tablero.eliminarPoder(filaTemp,columnaTemp);
-                }
-            }
-            if (!tablero.quedanPuntos()){
-                System.out.println(" ¡ Ganaste ! Recogiste todos los puntos ");
-                System.out.println(" Puntaje final : " + jugador.getPuntaje());
-                juegoTerminado =true;
-            }
 
-        }else{
-            System.out.println("!hay una pared ahí");
-        }
-        controlEnemigos.moverEnemigos(tablero);
-        tablero.mostrarTablero(jugador,enemigos);
-        for (Enemigo e : enemigos) {
-            if (e.getActivo() && e.verificarColision(jugador)) {
-                if (jugador.getPoderActivo()) {
-
-                    e.morir();
-                    System.out.println("¡Eliminaste un enemigo!");
-                    jugador.sumarPuntaje(e.getExperiencia());
-                } else {
-                    e.atacar(jugador);
-                    int reposicionFila = 0;
-                    int reposicionColumna = 0;
-                    do {
-                        reposicionFila = rand.nextInt(tablero.getFilas() - 2) + 1;
-                        reposicionColumna = rand.nextInt(tablero.getColumnas() - 2) + 1;
-                    } while (!tablero.movimientoValido(reposicionFila, reposicionColumna) ||
-                            (reposicionFila == jugador.getFila() && reposicionColumna == jugador.getColumna()));
-                    e.setFila(reposicionFila);
-                    e.setColumna(reposicionColumna);
-                    if (!jugador.estaVivo()) {
-                        System.out.println("¡Game Over! " + jugador.getNombre() + " ha muerto.");
-                        System.out.println("Puntaje final: " + jugador.getPuntaje());
-                        juegoTerminado = true;
+            for (Enemigo e : enemigos) {
+                if (e.getActivo() && e.verificarColision(jugador)) {
+                    if (jugador.getPoderActivo()) {
+                        e.morir();
+                        jugador.sumarPuntaje(e.getExperiencia());
+                    } else {
+                        e.atacar(jugador);
+                        int repoFila = 0, repoColumna = 0;
+                        do {
+                            repoFila = rand.nextInt(tablero.getFilas()-2)+1;
+                            repoColumna = rand.nextInt(tablero.getColumnas()-2)+1;
+                        } while (!tablero.movimientoValido(repoFila, repoColumna) ||
+                                (repoFila == jugador.getFila() && repoColumna == jugador.getColumna()));
+                        e.setFila(repoFila);
+                        e.setColumna(repoColumna);
                     }
                 }
             }
+
+            if (jugador.estaVivo()) {
+                if (tablero.hayPunto(filaTemp, columnaTemp)) {
+                    jugador.recogerPunto();
+                    tablero.eliminarPunto(filaTemp, columnaTemp);
+                }
+                if (tablero.hayPoder(filaTemp, columnaTemp)) {
+                    Poder p = tablero.obtenerPoder(filaTemp, columnaTemp);
+                    if (p != null) {
+                        p.activar(jugador);
+                        turnosPoder = p.getDuracion();
+                        System.out.println("¡Recogiste un poder: " + p.descripcion() + "!");
+                        tablero.eliminarPoder(filaTemp, columnaTemp);
+                    }
+                }
+            }
+
+            if (!jugador.estaVivo()) {
+                System.out.println("¡Game Over! Puntaje: " + jugador.getPuntaje());
+                juegoTerminado = true;
+            }
+
+            if (!tablero.quedanPuntos()) {
+                System.out.println("¡Ganaste! Puntaje: " + jugador.getPuntaje());
+                juegoTerminado = true;
+            }
+
+        } else {
+            System.out.println("¡Hay una pared ahí!");
         }
+
+        controlEnemigos.moverEnemigos(tablero);
+        tablero.mostrarTablero(jugador, enemigos);
         controlEnemigos.eliminarEnemigosInactivos();
     }
     public void generarEnemigos() {
@@ -208,5 +209,48 @@ public class Juego {
         System.out.println("# = Pared");
         System.out.println("==============================");
     }
+    public void iniciarVentana() {
+        Scanner sc = new Scanner(System.in);
 
+        System.out.println("Ingrese el Nombre del jugador");
+        String nombre = sc.nextLine();
+        int fila = 0;
+        while (fila < 3) {
+            System.out.print("Ingresa el número de filas (mínimo 3): ");
+            fila = sc.nextInt();
+            if (fila < 3) System.out.println("Debe ser mínimo 3.");
+        }
+        int columna = 0;
+        while (columna < 3) {
+            System.out.print("Ingresa el número de columnas (mínimo 3): ");
+            columna = sc.nextInt();
+            if (columna < 3) System.out.println("Debe ser mínimo 3.");
+        }
+        int maxMuros = (int)((fila - 2) * (columna - 2) * 0.2);
+        System.out.println("¿Cuántos muros interiores quiere? (máximo " + maxMuros + ")");
+        int cantMuro = sc.nextInt();
+        if (cantMuro > maxMuros) {
+            cantMuro = maxMuros;
+        }
+        System.out.println("¿Cuántos enemigos quieres?");
+        int cantEnemigo = sc.nextInt();
+        enemigos = new Enemigo[cantEnemigo];
+
+        tablero = new Tablero(fila, columna, cantMuro, 3, 5);
+        tablero.generarTablero();
+        tablero.agregarMuros();
+        tablero.agregarPoderes();
+
+        int filaJugador = rand.nextInt(fila - 2) + 1;
+        int columnaJugador = rand.nextInt(columna - 2) + 1;
+        while (!tablero.movimientoValido(filaJugador, columnaJugador)) {
+            filaJugador = rand.nextInt(fila - 2) + 1;
+            columnaJugador = rand.nextInt(columna - 2) + 1;
+        }
+        jugador = new Jugador(nombre, filaJugador, columnaJugador);
+        generarEnemigos();
+
+        // Lanza la ventana gráfica
+        new VentanaJuego(tablero, jugador, enemigos);
+    }
 }

@@ -129,5 +129,8 @@ public class Tablero {
     public void eliminarPoder (int filas,int columnas){
         matriz[filas][columnas] = ' ';
     }
+    public char [][] getMatriz(){
+        return matriz;
+    }
 }
 
